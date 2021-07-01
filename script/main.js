@@ -1,7 +1,6 @@
 async function getDataVN() {
     const responseData = await fetch("https://api.apify.com/v2/key-value-stores/ZsOpZgeg7dFS1rgfM/records/LATEST");
     const responseHcKey = await fetch("https://api.apify.com/v2/key-value-stores/p3nS2Q9TUn6kUOriJ/records/LATEST");
-    const responseChart = await fetch("https://api.apify.com/v2/key-value-stores/Tksmptn5O41eHrT4d/records/LATEST");
     const data = await responseData.json();
     const hcKey = await responseHcKey.json();
     return { data, hcKey };
@@ -21,7 +20,7 @@ async function getDataWorld() {
 var listCountriesMapped = []
 async function main() {
     var { infected, treated, recovered, deceased, detail } = await (await getDataVN()).data;
-    renderDashboardVn(infected, deceased, recovered, treated);
+    renderDashboardVn(infected, deceased, recovered, treated,detail.length);
     const { countries_stat, statistic_taken_at, world_total } = await (await getDataWorld());
     $('#last-updated')[0].textContent = "Last update: " + statistic_taken_at;
     const { total_cases, new_cases, total_recovered, total_deaths, new_deaths } = world_total;
@@ -59,16 +58,16 @@ function renderDashboardWorld(confirmed, new_cases, death, new_deaths, released,
     $(".death.diff")[0].textContent = "(+" + new_deaths + ")";
     $(".released.number")[0].dataset.target = removeComma(released);
     $(".fatality.number")[0].textContent = fatality;
-    $(".country.number")[0].dataset.target = '221';
+    $(".country.number")[0].dataset.target = '222';
 
 }
 
-function renderDashboardVn(confirmed, death, released, fatality) {
+function renderDashboardVn(confirmed, death, released, fatality, provinces) {
     $(".confirmed.number")[1].dataset.target = confirmed
     $(".death.number")[1].dataset.target = death;
     $(".released.number")[1].dataset.target = released;
     $(".fatality.number")[1].dataset.target = fatality;
-    $(".provinces.number")[0].dataset.target = "56";
+    $(".provinces.number")[0].dataset.target = provinces;
 }
 function removeComma(num) {
     return num.replaceAll(',', '')
